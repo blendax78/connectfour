@@ -10,14 +10,14 @@ class BoardServiceModel extends ServiceModel
         parent::__construct();
         $this->model = new \Salesloft\Models\Board();
         $this->boardRepository = $this->entityManager->getRepository('\Salesloft\Models\Board');
-        $this->userRepository = $this->entityManager->getRepository('\Salesloft\Models\User');
+        $this->playerRepository = $this->entityManager->getRepository('\Salesloft\Models\Player');
     }
 
     public function findCurrentBoard()
     {
         return array(
-            'board' => $this->boardRepository->findBy(array('is_over' => 0)
-            'users' => $this->userRepository->findAll();
+            'board' => $this->boardRepository->findBy(array('is_over' => 0)),
+            'players' => $this->playerRepository->findAll()
         );
     }
 

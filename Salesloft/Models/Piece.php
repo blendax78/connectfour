@@ -67,7 +67,7 @@ class Piece extends Model
     }
 
     public function setY($y) {
-        $this->y = $y
+        $this->y = $y;
     }
 
     public function getColor() {
@@ -75,7 +75,7 @@ class Piece extends Model
     }
 
     public function setColor($color) {
-        $this->color = $color
+        $this->color = $color;
     }
 
     public function getBoardId() {
@@ -83,7 +83,7 @@ class Piece extends Model
     }
 
     public function setBoardId($boardId) {
-        $this->board_id = $boardId
+        $this->board_id = $boardId;
     }
 
 }

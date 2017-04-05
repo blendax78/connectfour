@@ -48,9 +48,12 @@
         // Backbone Objects
         .script('/assets/js/application.js')
         .script('/assets/js/router.js')
-        .script('/assets/js/views/add.js')
-        .script('/assets/js/models/board.js')
-        .script('/assets/js/collections/boards.js')
+        .script('/assets/js/models/user.js')
+        .script('/assets/js/models/piece.js')
+        .script('/assets/js/models/game.js')
+        .script('/assets/js/collections/users.js')
+        .script('/assets/js/collections/pieces.js')
+        .script('/assets/js/collections/games.js')
         .script('/assets/js/views/index.js').wait(function(){
           // Backbone Initialization
           init();

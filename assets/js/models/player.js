@@ -1,4 +1,4 @@
-Salesloft.Models.User = Backbone.Model.extend({
+Salesloft.Models.Player = Backbone.Model.extend({
     initialize: function()
     {
       // Javascript Model Initialization for a User.
@@ -8,6 +8,6 @@ Salesloft.Models.User = Backbone.Model.extend({
     url: function()
     {
       // Server endpoint
-        return '/user';
+        return '/player';
     }
 });

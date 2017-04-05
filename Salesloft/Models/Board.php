@@ -49,7 +49,7 @@ class Board extends Model
     }
 
     public function setPieces($pieces) {
-        $this->pieces = $pieces
+        $this->pieces = $pieces;
     }
 
 }

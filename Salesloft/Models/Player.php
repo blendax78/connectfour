@@ -16,16 +16,23 @@ class Player extends Model
     protected $id;
 
     /**
-     * @Column(type="integer")
-     * @var int
-     */
-    protected $is_over;
-
-    /**
-     * @Column(type="string")
+     * @Name @Column(type="string")
      * @var string
      */
-    protected $pieces;
+    protected $name;
+
+    /**
+     * @Turn @Column(type="integer")
+     * @var int
+     */
+    protected $turn;
+
+    /**
+     * @IsActive @Column(type="integer")
+     * @var int
+     */
+    protected $is_active;
+
 
     public function getId() {
         return $this->id;
@@ -34,21 +41,4 @@ class Player extends Model
     public function setId($id) {
         $this->id = $id;
     }
-
-    public function getIsOver() {
-        return $this->is_over;
-    }
-
-    public function setIsOver($is_over) {
-        $this->is_over = $is_over;
-    }
-
-    public function getPieces() {
-        return $this->pieces;
-    }
-
-    public function setPieces($pieces) {
-        $this->pieces = $pieces
-    }
-
 }

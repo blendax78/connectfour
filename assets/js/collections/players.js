@@ -1,5 +1,5 @@
-Salesloft.Collections.Users = Backbone.Collection.extend({
-    model: Salesloft.Models.Users,
+Salesloft.Collections.Players = Backbone.Collection.extend({
+    model: Salesloft.Models.Player,
 
     initialize: function ()
     {
@@ -10,6 +10,6 @@ Salesloft.Collections.Users = Backbone.Collection.extend({
     url: function ()
     {
         // Server endpoint
-        return '/user';
+        return '/player';
     }
 });
