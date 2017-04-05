@@ -16,20 +16,8 @@ class BoardsController extends Controller
 
     public function get($id = null)
     {
-        // Handles GET requests.  If an ID is set, return 1 board, otherwise, return all
-        if (isset($id)) {
-            $boards = $this->boards->find($id)->toArray();
-        } else {
-            $boardObjects = $this->boards->findAll();
-            if (count($boardObjects) > 0) {
-                $boards = array();
-                foreach($boardObjects as $boardObject) {
-                    $boards[] = $boardObject->toArray();
-                }
-            } else {
-                $boards = array();
-            }
-        }
+        $boardObject = $this->boards->findCurrentBoard();
+        $boards = $boardObject->toArray();
 
         $this->boardsView->render(json_encode($boards));
     }

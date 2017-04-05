@@ -9,12 +9,16 @@ class BoardServiceModel extends ServiceModel
         // Uses ServiceModel object, and sets relevent fields to Board Object
         parent::__construct();
         $this->model = new \Salesloft\Models\Board();
-        $this->repository = $this->entityManager->getRepository('\Salesloft\Models\Board');
+        $this->boardRepository = $this->entityManager->getRepository('\Salesloft\Models\Board');
+        $this->userRepository = $this->entityManager->getRepository('\Salesloft\Models\User');
     }
 
-    public function findAll()
+    public function findCurrentBoard()
     {
-        return $this->repository->findBy(array('is_over' => 0));
+        return array(
+            'board' => $this->boardRepository->findBy(array('is_over' => 0)
+            'users' => $this->userRepository->findAll();
+        );
     }
 
 }

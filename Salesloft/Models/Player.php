@@ -5,9 +5,9 @@ namespace Salesloft\Models;
 // Doctrine Model for Boards
 
 /**
- * @Entity @Table(name="board")
+ * @Entity @Table(name="player")
  */
-class Board extends Model
+class Player extends Model
 {
     /**
      * @Id @Column(type="integer") @GeneratedValue
@@ -22,9 +22,8 @@ class Board extends Model
     protected $is_over;
 
     /**
-     * Bidirectional - One-To-Many
-     *
-     * @OneToMany(targetEntity="Piece", mappedBy="board")
+     * @Column(type="string")
+     * @var string
      */
     protected $pieces;
 
