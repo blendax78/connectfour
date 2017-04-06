@@ -13,13 +13,12 @@ Salesloft.Views.IndexView = Backbone.View.extend({
         // Set up for Index View
         // Vars: options is an object with properties necessary for this view.
         this.collection = options.collection;
-        _.bindAll(this, 'render', 'dropTile');
+        _.bindAll(this, 'render', 'dropTile', 'renderPlayer');
         var _this = this;
 
         var renderArray = [
             'sync',
-            'change',
-            'remove'
+            'change'
         ];
 
         $.each(renderArray, function(index, value) {
@@ -33,23 +32,29 @@ Salesloft.Views.IndexView = Backbone.View.extend({
         this.collection.fetch();
     },
 
-    render: function()
+    renderPlayer: function(board)
     {
-      var board = this.collection.models[0].toJSON();
+      console.log('rp');
       var players = board.players;
-
-      // Renders ICanHaz template and adds it to DOM
       var playerTemplate = ich.player_template({
         currentPlayer: players.where({ is_active: 1 })[0].attributes,
         nextPlayer: players.where({ is_active: 0 })[0].attributes
       });
 
+      $('#player-container').html(playerTemplate)
+    },
+
+    render: function()
+    {
+      var board = this.collection.models[0].toJSON();
+
+      // Renders ICanHaz template and adds it to DOM
       var boardTemplate = ich.game_template({
           board: board,
           pieces: board.pieces.getGrid()
       });
 
-      $('#player-container').html(playerTemplate)
+      this.renderPlayer(board);
       this.$el.html(boardTemplate);
     },
 
@@ -63,9 +68,22 @@ Salesloft.Views.IndexView = Backbone.View.extend({
         return;
       }
       var tile = this.collection.models[0].get('pieces').get($elem.data().id);
-      console.log($elem.data());
-      console.log(tile);
-      // var clicks = bookmark.get('click_count');
+      var currentPlayer = this.collection.models[0].get('players').get(parseInt($('#currentPlayer').val()));
+      var nextPlayer = this.collection.models[0].get('players').get(parseInt($('#nextPlayer').val()));
 
+      $elem.data('selected', '1');
+
+      if (currentPlayer.get('id') === 1) {
+        tile.set('color', 'red');
+      } else {
+        tile.set('color', 'blue');
+      }
+
+      currentPlayer.set('is_active', 0);
+      nextPlayer.set('is_active', 1);
+
+      console.log($elem.data(), currentPlayer);
+      console.log(tile);
+      this.render();
     }
 });
