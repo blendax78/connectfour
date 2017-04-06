@@ -6,6 +6,10 @@ body {
 	padding-top: 20px;
 }
 
+.c4-row {
+  height: 65px;
+}
+
 .bold {
   font-weight: bold;
 }

@@ -18,14 +18,14 @@ Salesloft.Views.IndexView = Backbone.View.extend({
         _.bindAll(this, 'render', 'clickLink');
         var _this = this;
 
-        var renderArray = [     
+        var renderArray = [
             'sync',
             'change',
             'remove'
         ];
 
         $.each(renderArray, function(index, value) {
-            // Since multiple events call the render() function, we 
+            // Since multiple events call the render() function, we
             // cycle through an array of events in order to bind them.
             _this.collection.on(value, function() {
                 _this.render();
@@ -46,7 +46,6 @@ Salesloft.Views.IndexView = Backbone.View.extend({
             pieces: board.pieces.getGrid()
         });
 
-        window.console.log(board.pieces.getGrid());
         this.$el.html(template);
     },
 

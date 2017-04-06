@@ -67,9 +67,9 @@
       <div class="row">
       {{#pieces}}
         {{#row}}
-          <div class="row" data-id={{id}}>
+          <div class="row c4-row" data-id={{id}}>
             {{#col}}
-              <div class="col-md-1 col-sm-1">
+              <div class="col-md-1 col-sm-1" style="background-color: {{color}}">
                 {{x}},{{y}}
               </div>
             {{/col}}
