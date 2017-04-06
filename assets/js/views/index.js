@@ -37,12 +37,16 @@ Salesloft.Views.IndexView = Backbone.View.extend({
 
     render: function()
     {
+        var board = this.collection.models[0].toJSON();
         // Renders ICanHaz template and adds it to DOM
 
-        // Debug
-        window.console.log({ models: this.collection.toJSON() });
-        window.a = { models: this.collection.toJSON() };
-        var template = ich.game_template({ models: this.collection.toJSON() });
+        var template = ich.game_template({
+            board: board,
+            players: board.players.toJSON(),
+            pieces: board.pieces.getGrid()
+        });
+
+        window.console.log(board.pieces.getGrid());
         this.$el.html(template);
     },
 

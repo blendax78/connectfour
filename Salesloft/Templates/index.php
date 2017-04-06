@@ -2,14 +2,15 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   
     <title>Connect Four</title>
     <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="/assets/stylesheets/style.css" type="text/css" />
   </head>
-  <body>
+  <body class="container">
 
   <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
@@ -64,17 +65,17 @@
   <!-- JS Templates -->
     <script id="game_template" type="text/html">
       <div class="row">
-      {{#models}}
-        {{#pieces}}
-          {{#models}}
-            <div class="row" data-id={{id}}>
+      {{#pieces}}
+        {{#row}}
+          <div class="row" data-id={{id}}>
+            {{#col}}
               <div class="col-md-1 col-sm-1">
-                {{x}}
+                {{x}},{{y}}
               </div>
-            </div>
-          {{/models}}
-        {{/pieces}}
-      {{/models}}
+            {{/col}}
+          </div>
+        {{/row}}
+      {{/pieces}}
     </script>
   </body>
 </html>
