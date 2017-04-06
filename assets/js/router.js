@@ -19,7 +19,6 @@
 
         // return of Games from the server.
         this.indexView = new Salesloft.Views.IndexView({ collection: collection });
-        this.indexView.render();
     }
 
 });

@@ -41,17 +41,17 @@
     $(document).ready(function() {
       $LAB
         // Libraries
-        .script('/assets/js/libs/underscore-min.js')
+        .script('/assets/js/libs/underscore-min.js').wait()
         .script('/assets/js/libs/backbone-min.js').wait()
         .script('/assets/js/libs/ICanHaz.min.js')
         .script('/assets/bootstrap/js/bootstrap.min.js')
         // Backbone Objects
-        .script('/assets/js/application.js')
-        .script('/assets/js/router.js')
-        .script('/assets/js/models/user.js')
+        .script('/assets/js/application.js').wait()
+        .script('/assets/js/router.js').wait()
+        .script('/assets/js/models/player.js')
         .script('/assets/js/models/piece.js')
         .script('/assets/js/models/game.js')
-        .script('/assets/js/collections/users.js')
+        .script('/assets/js/collections/players.js')
         .script('/assets/js/collections/pieces.js')
         .script('/assets/js/collections/games.js')
         .script('/assets/js/views/index.js').wait(function(){
@@ -62,47 +62,18 @@
     </script>
 
   <!-- JS Templates -->
-    <script id="add_template" type="text/html">
+    <script id="game_template" type="text/html">
       <div class="row">
-        <div class="col-md-12 col-sm-12">
-          <form class="form-inline col-md-12 col-sm-12" id="add-form">
-            <input type="text" class="form-control" id="add-title" placeholder="Bookmark Title" />
-            <input type="text" class="form-control" id="add-url" placeholder="Bookmark URL" />
-            <button class="btn btn-primary" id="add-button">Add</button>
-          </form>
-        </div>
-      </div>
-    </script>
-    <script id="bookmark_template" type="text/html">
-      <div class="row">
-        <div class="col-md-2 col-sm-2 bold">
-          Title
-        </div>
-        <div class="col-md-4 col-sm-4 bold">
-          URL
-        </div>
-        <div class="col-md-1 col-sm-1 bold">
-          Clicks
-        </div>
-        <div class="col-md-1 col-sm-1 bold">
-          Delete?
-        </div>
-      </div>
       {{#models}}
-      <div class="row" data-id={{id}}>
-        <div class="col-md-2 col-sm-2">
-          {{title}}
-        </div>
-        <div class="col-md-4 col-sm-4">
-          <a href="#" class="link" data-id="{{id}}" >{{url}}</a>
-        </div>
-        <div class="col-md-1 col-sm-1">
-          {{click_count}}
-        </div>
-        <div class="col-md-1 col-sm-1">
-          <a href="#" class="delete" data-id="{{id}}">X</a>
-        </div>
-      </div>
+        {{#pieces}}
+          {{#models}}
+            <div class="row" data-id={{id}}>
+              <div class="col-md-1 col-sm-1">
+                {{x}}
+              </div>
+            </div>
+          {{/models}}
+        {{/pieces}}
       {{/models}}
     </script>
   </body>

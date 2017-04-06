@@ -1,5 +1,5 @@
 Salesloft.Collections.Games = Backbone.Collection.extend({
-    model: Salesloft.Models.Games,
+    model: Salesloft.Models.Game,
 
     initialize: function ()
     {
@@ -11,5 +11,16 @@ Salesloft.Collections.Games = Backbone.Collection.extend({
     {
         // Server endpoint
         return '/game';
+    },
+
+    parse: function(response) {
+        var pieces = new Salesloft.Collections.Pieces(response.board.pieces);
+        var players = new Salesloft.Collections.Players(response.players);
+
+        var game = new Salesloft.Models.Game(response.board);
+        game.set('pieces', pieces);
+        game.set('players', players);
+
+        return game;
     }
 });

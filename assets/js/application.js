@@ -7,7 +7,7 @@ Salesloft.Router = {};
 
 function init() {
   // Basic Application Initialization.
-  Salesloft.Router.router = new Salesloft.Router.router;
+  Salesloft.Router.router = new Salesloft.Router.router();
   Backbone.history.start();
 }
 

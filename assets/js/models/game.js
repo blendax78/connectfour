@@ -1,4 +1,4 @@
-Salesloft.Models.Piece = Backbone.Model.extend({
+Salesloft.Models.Game = Backbone.Model.extend({
     initialize: function()
     {
       // Javascript Model Initialization for a Game.
@@ -10,9 +10,5 @@ Salesloft.Models.Piece = Backbone.Model.extend({
     {
       // Server endpoint
         return '/game';
-    },
-
-    parse: function(response) {
-      console.log('hi', response);
     }
 });

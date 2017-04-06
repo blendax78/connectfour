@@ -1,5 +1,5 @@
 Salesloft.Collections.Pieces = Backbone.Collection.extend({
-    model: Salesloft.Models.Pieces,
+    model: Salesloft.Models.Piece,
 
     initialize: function ()
     {

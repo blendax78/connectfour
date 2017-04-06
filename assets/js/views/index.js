@@ -7,8 +7,7 @@ Salesloft.Views.IndexView = Backbone.View.extend({
     events:
     {
         // Declare DOM events for main Index View
-        'click .link': 'clickLink',
-        'click .delete': 'deleteLink'
+        'click .link': 'clickLink'
     },
 
     initialize: function(options)
@@ -30,7 +29,7 @@ Salesloft.Views.IndexView = Backbone.View.extend({
             // cycle through an array of events in order to bind them.
             _this.collection.on(value, function() {
                 _this.render();
-            })
+            });
         });
 
         this.collection.fetch();
@@ -39,8 +38,11 @@ Salesloft.Views.IndexView = Backbone.View.extend({
     render: function()
     {
         // Renders ICanHaz template and adds it to DOM
-        this.collection.sort();
-        var template = ich.bookmark_template({ models: this.collection.toJSON() });
+
+        // Debug
+        window.console.log({ models: this.collection.toJSON() });
+        window.a = { models: this.collection.toJSON() };
+        var template = ich.game_template({ models: this.collection.toJSON() });
         this.$el.html(template);
     },
 
