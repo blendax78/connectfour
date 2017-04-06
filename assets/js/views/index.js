@@ -13,7 +13,7 @@ Salesloft.Views.IndexView = Backbone.View.extend({
         // Set up for Index View
         // Vars: options is an object with properties necessary for this view.
         this.collection = options.collection;
-        _.bindAll(this, 'render', 'dropTile', 'renderPlayer');
+        _.bindAll(this, 'render', 'dropTile', 'renderPlayer', 'checkTiles', 'computerTurn');
         var _this = this;
 
         var renderArray = [
@@ -34,7 +34,6 @@ Salesloft.Views.IndexView = Backbone.View.extend({
 
     renderPlayer: function(board)
     {
-      console.log('rp');
       var players = board.players;
       var playerTemplate = ich.player_template({
         currentPlayer: players.where({ is_active: 1 })[0].attributes,
@@ -61,29 +60,54 @@ Salesloft.Views.IndexView = Backbone.View.extend({
     dropTile: function(e)
     {
       // Handles event for clicking on a 'tile'
-      var $elem = $(e.currentTarget);
+      var $elem = (e.currentTarget) ? $(e.currentTarget) || $(e);
+      var currentPlayer = this.collection.models[0].get('players').get(parseInt($('#currentPlayer').val()));
 
-      if ($elem.data() && $elem.data().selected !== '') {
+      if (($elem.data() && $elem.data().selected !== 0) || currentPlayer.get('is_human') === 0) {
         // Already selected
         return;
       }
       var tile = this.collection.models[0].get('pieces').get($elem.data().id);
-      var currentPlayer = this.collection.models[0].get('players').get(parseInt($('#currentPlayer').val()));
       var nextPlayer = this.collection.models[0].get('players').get(parseInt($('#nextPlayer').val()));
 
-      $elem.data('selected', '1');
+      $elem.data('selected', 1);
 
-      if (currentPlayer.get('id') === 1) {
+      if (currentPlayer.get('is_human') === 1) {
         tile.set('color', 'red');
       } else {
-        tile.set('color', 'blue');
+        tile.set('color', 'yellow');
       }
+
+      tile.set('is_selected', 1);
 
       currentPlayer.set('is_active', 0);
       nextPlayer.set('is_active', 1);
 
-      console.log($elem.data(), currentPlayer);
-      console.log(tile);
+      if (nextPlayer.get('is_human') === 0) {
+        // Computer's turn.
+        this.computerTurn();
+      }
+
       this.render();
+    },
+
+    checkTiles: function()
+    {
+      // Checks for wins.
+    },
+
+    computerTurn: function()
+    {
+      var _this = this;
+      var options = null;
+      var randomTile = null;
+
+      // Computer 'AI'
+      setTimeout(function() {
+        options = _this.collection.models[0].get('pieces').where({ is_selected: 0});
+        randomTile = options[Math.floor(Math.random() * 100 % options.length)];
+
+        _this.dropTile(randomTile.get('id').toString())[0];
+      }, 1000);
     }
 });

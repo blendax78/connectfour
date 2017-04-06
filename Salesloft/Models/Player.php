@@ -33,6 +33,11 @@ class Player extends Model
      */
     protected $is_active;
 
+    /**
+     * @IsActive @Column(type="integer")
+     * @var int
+     */
+    protected $is_human;
 
     public function getId() {
         return $this->id;

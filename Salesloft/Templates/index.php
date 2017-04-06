@@ -79,7 +79,7 @@
         {{#row}}
           <div class="row" data-id={{id}}>
             {{#col}}
-              <div class="col-md-1 col-sm-1 c4-tile" style="background-color: {{color}}" data-id="{{id}}" data-selected="{{is_selected}}">
+              <div class="col-md-1 col-sm-1 c4-tile" style="background-color: {{color}}" id="tile{{id}}" data-id="{{id}}" data-selected="{{is_selected}}">
               </div>
             {{/col}}
           </div>
