@@ -4,10 +4,8 @@ Salesloft.Views.IndexView = Backbone.View.extend({
 
     el: '#salesloft-container',
 
-    events:
-    {
-        // Declare DOM events for main Index View
-        'click .link': 'clickLink'
+    events: {
+      'click .c4-tile': 'dropTile'
     },
 
     initialize: function(options)
@@ -15,7 +13,7 @@ Salesloft.Views.IndexView = Backbone.View.extend({
         // Set up for Index View
         // Vars: options is an object with properties necessary for this view.
         this.collection = options.collection;
-        _.bindAll(this, 'render', 'clickLink');
+        _.bindAll(this, 'render', 'dropTile');
         var _this = this;
 
         var renderArray = [
@@ -37,32 +35,37 @@ Salesloft.Views.IndexView = Backbone.View.extend({
 
     render: function()
     {
-        var board = this.collection.models[0].toJSON();
-        // Renders ICanHaz template and adds it to DOM
+      var board = this.collection.models[0].toJSON();
+      var players = board.players;
 
-        var template = ich.game_template({
-            board: board,
-            players: board.players.toJSON(),
-            pieces: board.pieces.getGrid()
-        });
+      // Renders ICanHaz template and adds it to DOM
+      var playerTemplate = ich.player_template({
+        currentPlayer: players.where({ is_active: 1 })[0].attributes,
+        nextPlayer: players.where({ is_active: 0 })[0].attributes
+      });
 
-        this.$el.html(template);
+      var boardTemplate = ich.game_template({
+          board: board,
+          pieces: board.pieces.getGrid()
+      });
+
+      $('#player-container').html(playerTemplate)
+      this.$el.html(boardTemplate);
     },
 
-    clickLink: function(e)
+    dropTile: function(e)
     {
-        // Handles event for clicking on a URL link
-        // Vars: Event object
-        // e.preventDefault();
+      // Handles event for clicking on a 'tile'
+      var $elem = $(e.currentTarget);
 
-        // var $elem = $(e.currentTarget);
-        // var bookmark = this.collection.get($elem.data().id);
-        // var clicks = bookmark.get('click_count');
+      if ($elem.data() && $elem.data().selected !== '') {
+        // Already selected
+        return;
+      }
+      var tile = this.collection.models[0].get('pieces').get($elem.data().id);
+      console.log($elem.data());
+      console.log(tile);
+      // var clicks = bookmark.get('click_count');
 
-        // bookmark.set('click_count', clicks + 1);
-        // bookmark.save();
-
-        // // Open clicked URL in new tab/window.
-        // window.open(bookmark.get('url'), '_blank');
     }
 });

@@ -32,7 +32,7 @@
   </nav>
 
     <div class="container">
-      <div id="add-bookmark"></div>
+      <div id="player-container"></div>
       <div id="salesloft-container"></div>
     </div>
 
@@ -63,14 +63,23 @@
     </script>
 
   <!-- JS Templates -->
+    <script id="player_template" type="text/html">
+      {{#currentPlayer}}
+        <h2>Current Player: {{name}}</h2>
+        <input type="hidden" id="currentPlayer" value="{{id}}" />
+      {{/currentPlayer}}
+      {{#nextPlayer}}
+        <input type="hidden" id="nextPlayer" value="{{id}}" />
+      {{/nextPlayer}}
+    </script>
+
     <script id="game_template" type="text/html">
       <div class="row">
       {{#pieces}}
         {{#row}}
-          <div class="row c4-row" data-id={{id}}>
+          <div class="row" data-id={{id}}>
             {{#col}}
-              <div class="col-md-1 col-sm-1" style="background-color: {{color}}">
-                {{x}},{{y}}
+              <div class="col-md-1 col-sm-1 c4-tile" style="background-color: {{color}}" data-id="{{id}}" data-selected="{{is_selected}}">
               </div>
             {{/col}}
           </div>
