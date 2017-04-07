@@ -57,13 +57,15 @@ Salesloft.Views.IndexView = Backbone.View.extend({
       this.$el.html(boardTemplate);
     },
 
-    dropTile: function(e)
+    dropTile: function(e, computerTurn)
     {
       // Handles event for clicking on a 'tile'
-      var $elem = (e.currentTarget) ? $(e.currentTarget) || $(e);
+
+      var $elem = (e.currentTarget) ? $(e.currentTarget) : $(e);
+
       var currentPlayer = this.collection.models[0].get('players').get(parseInt($('#currentPlayer').val()));
 
-      if (($elem.data() && $elem.data().selected !== 0) || currentPlayer.get('is_human') === 0) {
+      if (($elem.data() && $elem.data().selected !== 0) || (currentPlayer.get('is_human') === 0 && !computerTurn)) {
         // Already selected
         return;
       }
@@ -107,7 +109,7 @@ Salesloft.Views.IndexView = Backbone.View.extend({
         options = _this.collection.models[0].get('pieces').where({ is_selected: 0});
         randomTile = options[Math.floor(Math.random() * 100 % options.length)];
 
-        _this.dropTile(randomTile.get('id').toString())[0];
+        _this.dropTile($('#tile' + randomTile.get('id').toString())[0], true);
       }, 1000);
     }
 });
