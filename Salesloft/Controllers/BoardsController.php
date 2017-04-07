@@ -12,14 +12,11 @@ class BoardsController extends Controller
         parent::__construct();
         $this->boardsView = new \Salesloft\Views\BoardsView();
         $this->boards = new \Salesloft\Service\BoardServiceModel();
-        $this->players = new \Salesloft\Service\BoardServiceModel();
     }
 
     public function get($id = null)
     {
         $boardObject = $this->boards->findCurrentBoard();
-
-        
 
         if (!empty($boardObject['board']) && !empty($boardObject['players'])) {
             $piecesObject = $boardObject['board'][0]->getPieces();

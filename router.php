@@ -8,5 +8,7 @@ require_once('site_config.php');
   '/game/:number' => 'Salesloft\Controllers\BoardsController',
   '/' => 'Salesloft\Controllers\IndexController',
   '/index' => 'Salesloft\Controllers\IndexController',
-  '/new/:string' => 'Salesloft\Controllers\IndexController'
+  '/new/:string' => 'Salesloft\Controllers\IndexController',
+  '/match' => 'Salesloft\Controllers\MatchController',
+  '/match/:string' => 'Salesloft\Controllers\MatchController'
 ));
