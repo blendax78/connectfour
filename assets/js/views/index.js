@@ -13,7 +13,7 @@ Salesloft.Views.IndexView = Backbone.View.extend({
         // Set up for Index View
         // Vars: options is an object with properties necessary for this view.
         this.collection = options.collection;
-        _.bindAll(this, 'render', 'dropTile', 'renderPlayer', 'checkTiles', 'computerTurn');
+        _.bindAll(this, 'render', 'dropTile', 'renderPlayer', 'computerTurn', 'checkForWin', 'checkForFall');
         var _this = this;
 
         var renderArray = [
@@ -28,6 +28,8 @@ Salesloft.Views.IndexView = Backbone.View.extend({
                 _this.render();
             });
         });
+
+        this.currentTile = null;
 
         this.collection.fetch();
     },
@@ -69,18 +71,20 @@ Salesloft.Views.IndexView = Backbone.View.extend({
         // Already selected
         return;
       }
-      var tile = this.collection.models[0].get('pieces').get($elem.data().id);
+      this.currentTile = this.collection.models[0].get('pieces').get($elem.data().id);
+      this.checkForFall();
+
       var nextPlayer = this.collection.models[0].get('players').get(parseInt($('#nextPlayer').val()));
 
       $elem.data('selected', 1);
 
       if (currentPlayer.get('is_human') === 1) {
-        tile.set('color', 'red');
+        this.currentTile.set('color', 'red');
       } else {
-        tile.set('color', 'yellow');
+        this.currentTile.set('color', 'yellow');
       }
 
-      tile.set('is_selected', 1);
+      this.currentTile.set('is_selected', 1);
 
       currentPlayer.set('is_active', 0);
       nextPlayer.set('is_active', 1);
@@ -93,7 +97,33 @@ Salesloft.Views.IndexView = Backbone.View.extend({
       this.render();
     },
 
-    checkTiles: function()
+    checkForFall: function()
+    {
+      var x = this.currentTile.get('x');
+      var y = this.currentTile.get('y');
+      var lowestTile = null;
+
+      // Just so we don't have to search through all the available slots again.
+      var col = this.collection.models[0].get('pieces').where({ x: x });
+      
+      if (y === 5) {
+        // Bottom row. Nothing to do.
+        return;
+      }
+
+      for (var i = 5; i >= 0; i--) {
+        lowestTile = _.find(col, function(lower) {
+          return lower.get('y') === i && lower.get('is_selected') === 0;
+        });
+
+        if (lowestTile ) {
+          this.currentTile = lowestTile;
+          break;
+        }
+      }
+    },
+
+    checkForWin: function()
     {
       // Checks for wins.
     },
