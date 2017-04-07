@@ -46,6 +46,12 @@ class Piece extends Model
     protected $is_selected;
 
     /**
+     * @Column(type="integer")
+     * @var int
+     */
+    protected $selected_by;
+
+    /**
      * Bidirectional - Many Pieces belong to a Board
      *
      * @ManyToOne(targetEntity="Board", inversedBy="pieces")

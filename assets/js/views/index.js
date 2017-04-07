@@ -13,6 +13,10 @@ Salesloft.Views.IndexView = Backbone.View.extend({
         // Set up for Index View
         // Vars: options is an object with properties necessary for this view.
         this.collection = options.collection;
+        this.pieces = null;
+        this.board = null;
+        this.players = null;
+
         _.bindAll(this, 'render', 'dropTile', 'renderPlayer', 'computerTurn', 'checkForWin', 'checkForFall');
         var _this = this;
 
@@ -25,21 +29,25 @@ Salesloft.Views.IndexView = Backbone.View.extend({
             // Since multiple events call the render() function, we
             // cycle through an array of events in order to bind them.
             _this.collection.on(value, function() {
-                _this.render();
+              _this.board = _this.collection.models[0];
+              _this.pieces = _this.board.get('pieces');
+              _this.players = _this.board.get('players');
+
+              _this.render();
             });
         });
 
         this.currentTile = null;
+        this.win = false;
 
         this.collection.fetch();
     },
 
-    renderPlayer: function(board)
+    renderPlayer: function()
     {
-      var players = board.players;
       var playerTemplate = ich.player_template({
-        currentPlayer: players.where({ is_active: 1 })[0].attributes,
-        nextPlayer: players.where({ is_active: 0 })[0].attributes
+        currentPlayer: this.players.where({ is_active: 1 })[0].attributes,
+        nextPlayer: this.players.where({ is_active: 0 })[0].attributes
       });
 
       $('#player-container').html(playerTemplate)
@@ -47,15 +55,13 @@ Salesloft.Views.IndexView = Backbone.View.extend({
 
     render: function()
     {
-      var board = this.collection.models[0].toJSON();
-
       // Renders ICanHaz template and adds it to DOM
       var boardTemplate = ich.game_template({
-          board: board,
-          pieces: board.pieces.getGrid()
+          board: this.board,
+          pieces: this.pieces.getGrid()
       });
 
-      this.renderPlayer(board);
+      this.renderPlayer();
       this.$el.html(boardTemplate);
     },
 
@@ -65,16 +71,16 @@ Salesloft.Views.IndexView = Backbone.View.extend({
 
       var $elem = (e.currentTarget) ? $(e.currentTarget) : $(e);
 
-      var currentPlayer = this.collection.models[0].get('players').get(parseInt($('#currentPlayer').val()));
+      var currentPlayer = this.players.get(parseInt($('#currentPlayer').val()));
 
-      if (($elem.data() && $elem.data().selected !== 0) || (currentPlayer.get('is_human') === 0 && !computerTurn)) {
+      if ((($elem.data() && $elem.data().selected !== 0) || (currentPlayer.get('is_human') === 0 && !computerTurn)) || this.win) {
         // Already selected
         return;
       }
-      this.currentTile = this.collection.models[0].get('pieces').get($elem.data().id);
+      this.currentTile = this.pieces.get($elem.data().id);
       this.checkForFall();
 
-      var nextPlayer = this.collection.models[0].get('players').get(parseInt($('#nextPlayer').val()));
+      var nextPlayer = this.players.get(parseInt($('#nextPlayer').val()));
 
       $elem.data('selected', 1);
 
@@ -85,6 +91,9 @@ Salesloft.Views.IndexView = Backbone.View.extend({
       }
 
       this.currentTile.set('is_selected', 1);
+      this.currentTile.set('selected_by', currentPlayer.get('id'));
+
+      this.checkForWin();
 
       currentPlayer.set('is_active', 0);
       nextPlayer.set('is_active', 1);
@@ -99,6 +108,7 @@ Salesloft.Views.IndexView = Backbone.View.extend({
 
     checkForFall: function()
     {
+      // Checks if there are any available slots below the one selected.
       var x = this.currentTile.get('x');
       var y = this.currentTile.get('y');
       var lowestTile = null;
@@ -126,6 +136,8 @@ Salesloft.Views.IndexView = Backbone.View.extend({
     checkForWin: function()
     {
       // Checks for wins.
+      var allSelected = this.pieces.where({is_selected: 1, selected_by: this.players.where({ is_active: 1 })[0].get('id')});
+      console.log('Zoinks!', allSelected);
     },
 
     computerTurn: function()
@@ -136,7 +148,7 @@ Salesloft.Views.IndexView = Backbone.View.extend({
 
       // Computer 'AI'
       setTimeout(function() {
-        options = _this.collection.models[0].get('pieces').where({ is_selected: 0});
+        options = _this.pieces.where({ is_selected: 0});
         randomTile = options[Math.floor(Math.random() * 100 % options.length)];
 
         _this.dropTile($('#tile' + randomTile.get('id').toString())[0], true);
