@@ -24,9 +24,10 @@
             <a href="/" class="navbar-brand">Connect Four</a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-9">
-            <!--<ul class="nav navbar-nav">
-                <li class=""><a href="/new">New Game</a></li>
-            </ul>-->
+            <ul class="nav navbar-nav">
+              <li class=""><a href="#" onClick="location.reload();">New Game</a></li>
+              <!-- Ghetto way of doing this. TODO: Add event to Backbone to restart DB values & re-render-->
+            </ul>
         </div>
     </div>
   </nav>
@@ -64,27 +65,31 @@
 
   <!-- JS Templates -->
     <script id="player_template" type="text/html">
-      {{#currentPlayer}}
-        <h2>Current Player: {{name}}</h2>
-        <input type="hidden" id="currentPlayer" value="{{id}}" />
-      {{/currentPlayer}}
-      {{#nextPlayer}}
-        <input type="hidden" id="nextPlayer" value="{{id}}" />
-      {{/nextPlayer}}
+      <div class="col-sm-12 col-md-12 col-lg-12">
+        {{#currentPlayer}}
+          <h2>Current Player: {{name}} {{#winner}}<span class="red">WINNER</span>{{/winner}}</h2>
+          <input type="hidden" id="currentPlayer" value="{{id}}" />
+        {{/currentPlayer}}
+        {{#nextPlayer}}
+          <input type="hidden" id="nextPlayer" value="{{id}}" />
+        {{/nextPlayer}}
+      </div>
     </script>
 
     <script id="game_template" type="text/html">
       <div class="row">
-      {{#pieces}}
-        {{#row}}
-          <div class="row" data-id={{id}}>
-            {{#col}}
-              <div class="col-md-1 col-sm-1 c4-tile" style="background-color: {{color}}" id="tile{{id}}" data-id="{{id}}" data-selected="{{is_selected}}">
-              </div>
-            {{/col}}
-          </div>
-        {{/row}}
-      {{/pieces}}
+        <div class="col-sm-10 col-md-10 col-lg-10">
+        {{#pieces}}
+          {{#row}}
+            <div class="row" data-id={{id}}>
+              {{#col}}
+                <div class="col-md-1 col-sm-1 c4-tile" style="background-color: {{color}}" id="tile{{id}}" data-id="{{id}}" data-selected="{{is_selected}}">
+                </div>
+              {{/col}}
+            </div>
+          {{/row}}
+        {{/pieces}}
+      </div>
     </script>
   </body>
 </html>
