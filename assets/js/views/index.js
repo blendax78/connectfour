@@ -16,6 +16,7 @@ Salesloft.Views.IndexView = Backbone.View.extend({
         this.pieces = null;
         this.board = null;
         this.players = null;
+        this.matches = new Salesloft.Collections.Matches();
 
         _.bindAll(this, 'render', 'dropTile', 'renderPlayer', 'computerTurn', 'checkForWin', 'checkForFall');
         var _this = this;
@@ -37,9 +38,17 @@ Salesloft.Views.IndexView = Backbone.View.extend({
             });
         });
 
+        $.each(renderArray, function(index, value) {
+
+          _this.matches.on(value, function() {
+            _this.renderMatches();
+          });
+        });
+
         this.currentTile = null;
         this.win = false;
 
+        this.matches.fetch();
         this.collection.fetch();
     },
 
@@ -52,6 +61,15 @@ Salesloft.Views.IndexView = Backbone.View.extend({
       });
 
       $('#player-container').html(playerTemplate)
+    },
+
+    renderMatches: function()
+    {
+      var matchTemplate = ich.match_template({
+        matches: this.matches.toJSON()
+      });
+
+      $('#matches-container').html(matchTemplate);
     },
 
     render: function()
@@ -104,6 +122,10 @@ Salesloft.Views.IndexView = Backbone.View.extend({
           // Computer's turn.
           this.computerTurn();
         }
+      } else {
+        var newWinner = new Salesloft.Models.Match({ name: currentPlayer.get('name') });
+        newWinner.save();
+        this.matches.add(newWinner);
       }
 
       this.render();

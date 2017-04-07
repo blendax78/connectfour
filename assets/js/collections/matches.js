@@ -5,6 +5,11 @@ Salesloft.Collections.Matches = Backbone.Collection.extend({
     {
     },
 
+    parse: function (result)
+    {
+      return result.matches;
+    },
+
     url: function ()
     {
         // Server endpoint
