@@ -160,31 +160,7 @@ Salesloft.Views.IndexView = Backbone.View.extend({
 
     checkForWin: function()
     {
-      // Checks for wins for current player.
-      var allSelected = this.pieces.where({is_selected: 1, selected_by: this.players.where({ is_active: 1 })[0].get('id')});
-
-      if (allSelected.length < 4) {
-        // Not enough for a winner.
-        return;
-      }
-
-      var horz = [];
-      var vert = [];
-
-      _.each(allSelected, function(selected) {
-        if (this.currentTile.get('x') === selected.get('x')) {
-          horz.push(selected);
-        }
-
-        if (this.currentTile.get('y') === selected.get('y')) {
-          vert.push(selected); 
-        }
-      }, this);
-
-      if (horz.length >= 4 || vert.length >= 4) {
-        // This isn't ideal. It doesn't check for diagonals or sequential colors.
-        this.win = true;
-      }
+      this.board.checkForWin.call(this);
     },
 
     computerTurn: function()
