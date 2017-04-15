@@ -12,36 +12,54 @@ Salesloft.Models.Game = Backbone.Model.extend({
         return '/game';
     },
 
-    AIChoose: function(horz, vert) {
+    AIChoose: function(horz, vert, currentTile) {
       var pieces = this.get('pieces');
-      console.log('here', pieces, horz, vert);
+
+      console.log(horz, vert);
+      // Convert to backbone objects.
+      // horz = new Salesloft.Collections.Pieces(horz);
+      // vert = new Salesloft.Collections.Pieces(vert);
+      // console.log('here', pieces, horz.pluck('y'), vert.pluck('x'), currentTile);
       return null;
     },
 
     checkForWin: function() {
       // Checks for wins for current player.
-      var allSelected = this.pieces.where({is_selected: 1, selected_by: this.players.where({ is_active: 1 })[0].get('id')});
+      var playerPieces = this.pieces.where({is_selected: 1, selected_by: this.players.where({ is_active: 1 })[0].get('id')});
       var currentPlayer = this.players.where({ is_active: 1 })[0].attributes
 
-      var horz = [];
-      var vert = [];
+      // var horz = { selected: [], empty: [] };
+      // var vert = { selected: [], empty: [] };
 
-      _.each(allSelected, function(selected) {
-        if (this.currentTile.get('x') === selected.get('x')) {
-          horz.push(selected);
-        }
+      // _.each(playerPieces, function(playerPiece) {
+        // if (this.currentTile.get('x') === playerPiece.get('x') && playerPiece.get('is_selected') === 1) {
+        //   horz.selected.push(playerPiece);
+        // }
 
-        if (this.currentTile.get('y') === selected.get('y')) {
-          vert.push(selected); 
-        }
-      }, this);
+      //   if (this.currentTile.get('y') === playerPiece.get('y')) {
+      //     vert.selected.push(playerPiece); 
+      //   } else if (this.currentTile.get('y') === playerPiece.get('y') && playerPiece.get('is_selected') === 0) {
+      //     vert.empty.push(playerPiece);
+      //   }
 
-      if (horz.length >= 4 || vert.length >= 4) {
+      // }, this);
+
+      var horz = {
+        selected: this.pieces.where({is_selected: 1, x: this.currentTile.get('x'), selected_by: this.players.where({ is_active: 1 })[0].get('id')}),
+        empty: this.pieces.where({is_selected: 0, x: this.currentTile.get('x')})
+      };
+
+      var vert = {
+        selected: this.pieces.where({is_selected: 1, y: this.currentTile.get('y'), selected_by: this.players.where({ is_active: 1 })[0].get('id')}),
+        empty: this.pieces.where({is_selected: 0, y: this.currentTile.get('y')})
+      };
+
+      if (horz.selected.length >= 4 || vert.selected.length >= 4) {
         // This isn't ideal. It doesn't check for diagonals or sequential colors.
         this.win = true;
       } else if (currentPlayer.is_human === 1) {
         // AI's turn.
-        this.board.AIChoose(horz, vert);
+        this.board.AIChoose(horz, vert, this.currentTile);
       }
     }
 });
