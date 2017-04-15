@@ -13,13 +13,11 @@ Salesloft.Models.Game = Backbone.Model.extend({
     },
 
     AIChoose: function(horz, vert, currentTile) {
-      var pieces = this.get('pieces');
+      // Need to check for a sequence of numbers (different function?), then check for an empty space before or
+      // after sequence.
 
       console.log(horz, vert);
-      // Convert to backbone objects.
-      // horz = new Salesloft.Collections.Pieces(horz);
-      // vert = new Salesloft.Collections.Pieces(vert);
-      // console.log('here', pieces, horz.pluck('y'), vert.pluck('x'), currentTile);
+
       return null;
     },
 
@@ -28,33 +26,25 @@ Salesloft.Models.Game = Backbone.Model.extend({
       var playerPieces = this.pieces.where({is_selected: 1, selected_by: this.players.where({ is_active: 1 })[0].get('id')});
       var currentPlayer = this.players.where({ is_active: 1 })[0].attributes
 
-      // var horz = { selected: [], empty: [] };
-      // var vert = { selected: [], empty: [] };
-
-      // _.each(playerPieces, function(playerPiece) {
-        // if (this.currentTile.get('x') === playerPiece.get('x') && playerPiece.get('is_selected') === 1) {
-        //   horz.selected.push(playerPiece);
-        // }
-
-      //   if (this.currentTile.get('y') === playerPiece.get('y')) {
-      //     vert.selected.push(playerPiece); 
-      //   } else if (this.currentTile.get('y') === playerPiece.get('y') && playerPiece.get('is_selected') === 0) {
-      //     vert.empty.push(playerPiece);
-      //   }
-
-      // }, this);
-
       var horz = {
-        selected: this.pieces.where({is_selected: 1, x: this.currentTile.get('x'), selected_by: this.players.where({ is_active: 1 })[0].get('id')}),
-        empty: this.pieces.where({is_selected: 0, x: this.currentTile.get('x')})
+        selected: new Salesloft.Collections.Pieces(
+          this.pieces.where({is_selected: 1, x: this.currentTile.get('x'), selected_by: this.players.where({ is_active: 1 })[0].get('id')})
+        ),
+        empty: new Salesloft.Collections.Pieces(
+          this.pieces.where({is_selected: 0, x: this.currentTile.get('x')})
+        )
       };
 
       var vert = {
-        selected: this.pieces.where({is_selected: 1, y: this.currentTile.get('y'), selected_by: this.players.where({ is_active: 1 })[0].get('id')}),
-        empty: this.pieces.where({is_selected: 0, y: this.currentTile.get('y')})
+        selected: new Salesloft.Collections.Pieces(
+          this.pieces.where({is_selected: 1, y: this.currentTile.get('y'), selected_by: this.players.where({ is_active: 1 })[0].get('id')})
+        ),
+        empty: new Salesloft.Collections.Pieces(
+          this.pieces.where({is_selected: 0, y: this.currentTile.get('y')})
+        )
       };
 
-      if (horz.selected.length >= 4 || vert.selected.length >= 4) {
+      if (horz.selected.models.length >= 4 || vert.selected.models.length >= 4) {
         // This isn't ideal. It doesn't check for diagonals or sequential colors.
         this.win = true;
       } else if (currentPlayer.is_human === 1) {
