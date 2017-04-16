@@ -171,6 +171,7 @@ Salesloft.Views.IndexView = Backbone.View.extend({
 
       // Computer 'AI'
       setTimeout(function() {
+        
         options = _this.pieces.where({ is_selected: 0});
         randomTile = options[Math.floor(Math.random() * 100 % options.length)];
 
