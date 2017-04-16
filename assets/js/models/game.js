@@ -1,9 +1,6 @@
 Salesloft.Models.Game = Backbone.Model.extend({
     initialize: function()
     {
-      // Javascript Model Initialization for a Game.
-      // If we have to do any kind of changes to Game properties, this is where to do it.
-      // var pieces = new Salesloft.Collections.Players(this.get('players'))
     },
 
     url: function()
@@ -70,15 +67,24 @@ Salesloft.Models.Game = Backbone.Model.extend({
     {
       var _this = this;
       var options = null;
-      var randomTile = null;
+      var newTile = null;
+      var horz = this.getHorz();
+      var vert = this.getVert();
 
       // Computer 'AI'
       setTimeout(function() {
-        
-        options = _this.pieces.where({ is_selected: 0});
-        randomTile = options[Math.floor(Math.random() * 100 % options.length)];
 
-        _this.dropTile($('#tile' + randomTile.get('id').toString())[0], true);
+        if ((horz.empty.length > 0 && horz.opponent.length > 1 && _this.board.checkForSequential(horz.opponent.pluck('y'))) 
+          || (vert.empty.length > 0 && vert.opponent.length > 1 && _this.board.checkForSequential(vert.opponent.pluck('x')))) {
+          options = (horz.opponent.length > vert.opponent.length) ? options = horz.empty.where({ is_selected: 0}) : vert.empty.where({ is_selected: 0});;
+        } else {
+          options = _this.pieces.where({ is_selected: 0});
+        }
+
+        newTile = options[Math.floor(Math.random() * 100 % options.length)];
+
+        if (newTile && newTile.get)
+        _this.dropTile($('#tile' + newTile.get('id').toString())[0], true);
       }, 1000);
     }
 });
