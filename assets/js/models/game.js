@@ -44,6 +44,7 @@ Salesloft.Models.Game = Backbone.Model.extend({
             }
           }
         }
+      }
 
       return result;
     },
@@ -53,29 +54,8 @@ Salesloft.Models.Game = Backbone.Model.extend({
       var playerPieces = this.pieces.where({is_selected: 1, selected_by: this.players.where({ is_active: 1 })[0].get('id')});
       var currentPlayer = this.players.where({ is_active: 1 })[0].attributes
 
-      var horz = {
-        selected: new Salesloft.Collections.Pieces(
-          this.pieces.where({is_selected: 1, x: this.currentTile.get('x'), selected_by: this.players.where({ is_active: 1 })[0].get('id')})
-        ),
-        empty: new Salesloft.Collections.Pieces(
-          this.pieces.where({is_selected: 0, x: this.currentTile.get('x')})
-        ),
-        opponent: new Salesloft.Collections.Pieces(
-          this.pieces.where({is_selected: 1, x: this.currentTile.get('x'), selected_by: this.players.where({ is_active: 0 })[0].get('id')})
-        )
-      };
-
-      var vert = {
-        selected: new Salesloft.Collections.Pieces(
-          this.pieces.where({is_selected: 1, y: this.currentTile.get('y'), selected_by: this.players.where({ is_active: 1 })[0].get('id')})
-        ),
-        empty: new Salesloft.Collections.Pieces(
-          this.pieces.where({is_selected: 0, y: this.currentTile.get('y')})
-        ),
-        opponent: new Salesloft.Collections.Pieces(
-          this.pieces.where({is_selected: 1, y: this.currentTile.get('y'), selected_by: this.players.where({ is_active: 0 })[0].get('id')})
-        )
-      };
+      var horz = this.getHorz();
+      var vert = this.getVert();
 
       if (horz.selected.length >= 4 && this.board.checkForSequential(horz.selected.pluck('y')) 
           || vert.selected.length >= 4 && this.board.checkForSequential(vert.selected.pluck('x'))) {
@@ -84,5 +64,21 @@ Salesloft.Models.Game = Backbone.Model.extend({
         // AI's turn.
         this.board.AIChoose(horz, vert, this.currentTile);
       }
+    },
+
+    computerTurn: function()
+    {
+      var _this = this;
+      var options = null;
+      var randomTile = null;
+
+      // Computer 'AI'
+      setTimeout(function() {
+        
+        options = _this.pieces.where({ is_selected: 0});
+        randomTile = options[Math.floor(Math.random() * 100 % options.length)];
+
+        _this.dropTile($('#tile' + randomTile.get('id').toString())[0], true);
+      }, 1000);
     }
 });

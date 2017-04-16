@@ -18,7 +18,7 @@ Salesloft.Views.IndexView = Backbone.View.extend({
         this.players = null;
         this.matches = new Salesloft.Collections.Matches();
 
-        _.bindAll(this, 'render', 'dropTile', 'renderPlayer', 'computerTurn', 'checkForWin', 'checkForFall');
+        _.bindAll(this, 'render', 'dropTile', 'renderPlayer', 'computerTurn', 'checkForWin', 'checkForFall', 'getHorz', 'getVert');
         var _this = this;
 
         var renderArray = [
@@ -165,17 +165,36 @@ Salesloft.Views.IndexView = Backbone.View.extend({
 
     computerTurn: function()
     {
-      var _this = this;
-      var options = null;
-      var randomTile = null;
+      this.board.computerTurn.call(this);
+    },
 
-      // Computer 'AI'
-      setTimeout(function() {
-        
-        options = _this.pieces.where({ is_selected: 0});
-        randomTile = options[Math.floor(Math.random() * 100 % options.length)];
+    getHorz: function()
+    {
+      return {
+        selected: new Salesloft.Collections.Pieces(
+          this.pieces.where({is_selected: 1, x: this.currentTile.get('x'), selected_by: this.players.where({ is_active: 1 })[0].get('id')})
+        ),
+        empty: new Salesloft.Collections.Pieces(
+          this.pieces.where({is_selected: 0, x: this.currentTile.get('x')})
+        ),
+        opponent: new Salesloft.Collections.Pieces(
+          this.pieces.where({is_selected: 1, x: this.currentTile.get('x'), selected_by: this.players.where({ is_active: 0 })[0].get('id')})
+        )
+      };
+    },
 
-        _this.dropTile($('#tile' + randomTile.get('id').toString())[0], true);
-      }, 1000);
+    getVert: function()
+    {
+      return {
+        selected: new Salesloft.Collections.Pieces(
+          this.pieces.where({is_selected: 1, y: this.currentTile.get('y'), selected_by: this.players.where({ is_active: 1 })[0].get('id')})
+        ),
+        empty: new Salesloft.Collections.Pieces(
+          this.pieces.where({is_selected: 0, y: this.currentTile.get('y')})
+        ),
+        opponent: new Salesloft.Collections.Pieces(
+          this.pieces.where({is_selected: 1, y: this.currentTile.get('y'), selected_by: this.players.where({ is_active: 0 })[0].get('id')})
+        )
+      };
     }
 });
