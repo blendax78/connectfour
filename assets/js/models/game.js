@@ -76,14 +76,34 @@ Salesloft.Models.Game = Backbone.Model.extend({
 
         if ((horz.empty.length > 0 && horz.opponent.length > 1 && _this.board.checkForSequential(horz.opponent.pluck('y'))) 
           || (vert.empty.length > 0 && vert.opponent.length > 1 && _this.board.checkForSequential(vert.opponent.pluck('x')))) {
-          options = (horz.opponent.length > vert.opponent.length) ? options = horz.empty.where({ is_selected: 0}) : vert.empty.where({ is_selected: 0});;
+
+          if (horz.opponent.length > vert.opponent.length) {
+            // Computer will attempt to place in column, so actual choice doesn't matter, since it will fall to the bottom.
+            newTile = horz.empty.at(0);
+          } else {
+            // Computer needs to find nearest horizontal neighbor
+            for (var i = vert.empty.length - 1; i < vert.empty.length && i >= 0; i--) {
+              // Start from right to left
+
+              if (vert.opponent.where({ x: vert.empty.at(i).get('x') + 1 }).length > 0
+                  || vert.opponent.where({ x: vert.empty.at(i).get('x') - 1 }).length > 0) {
+                // Check tile to the right and the left.
+                newTile = vert.empty.at(i);
+                break;
+              }
+            }
+          }
+
+          if (!newTile) {
+            newTile = vert.empty.at(Math.floor(Math.random() * 100 % vert.empty.length));
+          }
+
         } else {
+          // By default, the computer opponent plays with a defensive style.
           options = _this.pieces.where({ is_selected: 0});
+          newTile = options[Math.floor(Math.random() * 100 % options.length)];
         }
 
-        newTile = options[Math.floor(Math.random() * 100 % options.length)];
-
-        if (newTile && newTile.get)
         _this.dropTile($('#tile' + newTile.get('id').toString())[0], true);
       }, 1000);
     }
